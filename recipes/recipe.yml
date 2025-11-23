@@ -69,8 +69,8 @@ modules:
    
       - scope: user
 
-  - type: shell
-    commands:
+  - type: script
+    shippets:
       # Установка Ollama
       - |-
         curl -fsSL https://ollama.ai/install.sh | sh
