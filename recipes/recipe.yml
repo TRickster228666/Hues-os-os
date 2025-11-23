@@ -58,11 +58,7 @@ modules:
 
           # Коммуникации
        
-    image:
-     formats:
-      - iso
-          
-          # Утилиты
+
             # аналог Spectacle для GNOME
           - com.github.tchx84.Flatseal
 
