@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: HUES-OS-os
-description: Custom Bazzite gaming image with all essential tools
+name: template
+description: HUES-OS v1.2 - KDE + Hyprland Gaming Beast
 base-image: ghcr.io/ublue-os/bazzite
 image-version: latest
 
@@ -10,28 +10,59 @@ modules:
       - source: system
         destination: /
 
+  # Шрифты (КРИТИЧЕСКИ ВАЖНЫ ДЛЯ HYPRLAND и Waybar)
+  - type: fonts
+    fonts:
+      nerd-fonts:
+        - FiraCode
+        - JetBrainsMono
+        - FontAwesome # Нужен для иконок в баре
+
   - type: dnf
     repos:
       copr:
         - atim/starship
+        - solopasha/hyprland # Свежий Hyprland (опционально, но лучше иметь свежий)
  
     install:
       packages:
-        # Системные утилиты
+        # --- CORE UTILS ---
         - git
         - curl
         - wget
         - htop
         - neovim
-        - fastfetch  # современная замена neofetch
-        - zsh        # мощная оболочка с автодополнением
-        - starship   # красивое приглашение командной строки
+        - fastfetch
+        - zsh
+        - starship
+        - zoxide
+        - bat
+        - eza
+        - fzf
+        - thefuck
         
-        # Игровое железо AMD
+        # --- HYPRLAND BASE (Добавляем базу Гиперлэнда) ---
+        - hyprland          # Сам оконный менеджер
+        - waybar            # Верхняя панель (база для Hyprland)
+        - wofi              # Меню запуска приложений (аналог "Пуск")
+        - swaybg            # Для установки обоев
+        - swaylock          # Экран блокировки
+        - swayidle          # Управление простоем (сон)
+        - mako              # Уведомления
+        - kitty             # Терминал (лучший для Hyprland)
+        - polkit-kde        # Агент авторизации (чтобы пароль спрашивал)
+        - qt5-qtwayland     # Чтобы Qt приложения работали в Wayland
+        - qt6-qtwayland
+        - xdg-desktop-portal-hyprland # Для записи экрана и шаринга
+        - grim              # Скриншоты
+        - slurp             # Выделение области скриншота
+        - wl-clipboard      # Работа буфера обмена
+        
+        # --- GAMING & DRIVERS ---
         - rocm-hip
         - rocm-opencl
-        
-        # Медиа и графика
+        - mpv
+        - partitionmanager
         
     remove:
       packages:
@@ -43,26 +74,31 @@ modules:
       - notify: true
         scope: system
         install:
-          # Браузеры
+          # --- BROWSERS ---
           - com.brave.Browser
           - com.microsoft.Edge
           
-          # Игры и игровые сервисы
+          # --- GAMING ---
           - com.valvesoftware.Steam
-          - com.heroicgameslauncher.hgl
           - net.lutris.Lutris
+          - com.heroicgameslauncher.hgl
+          - net.davidotek.pupgui2    # ProtonUp-Qt
+          - io.github.ben24.goverlay # MangoHud config
+          - com.usebottles.bottles
           
-          # Медиа - ВСЁ В ОДНОМ
-          - io.github.celluloid_player.Celluloid  # видео (лучший для GNOME)
-          - org.gnome.Loupe                      # изображения
-
-          # Коммуникации
-       
-
-            # аналог Spectacle для GNOME
+          # --- SOCIAL ---
+          - org.telegram.desktop
+          - dev.vencord.Vesktop      # Discord
+          
+          # --- MEDIA ---
+          - org.kde.haruna
+          - org.kde.gwenview
+          - com.obsproject.Studio
+          
+          # --- SYSTEM ---
           - com.github.tchx84.Flatseal
+          - org.kde.ark
+          - org.kde.filelight
+          - io.github.flattool.Warehouse # ВОТ ЭТА ШТУКА ПОМОЖЕТ УПРАВЛЯТЬ ФЛАТПАКАМИ
 
-   
       - scope: user
-
-
