@@ -32,8 +32,7 @@ modules:
         - rocm-opencl
         
         # Медиа и графика
-        - ffmpeg
-
+        
     remove:
       packages:
         - firefox
@@ -58,23 +57,14 @@ modules:
           - org.gnome.Loupe                      # изображения
 
           # Коммуникации
-          - com.rambox.Rambox
+       
     
           
           # Утилиты
-          - org.gnome.Screenshot  # аналог Spectacle для GNOME
+            # аналог Spectacle для GNOME
           - com.github.tchx84.Flatseal
 
    
       - scope: user
 
-  - type: script
-    snippets:
-      # Установка Ollama
-      - |-
-        curl -fsSL https://ollama.ai/install.sh | sh
-      
-      # Настройка Zsh как оболочки по умолчанию
-      - |-
-        chsh -s $(which zsh)
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
