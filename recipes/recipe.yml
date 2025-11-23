@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: bazzite-gaming
+name: HUES-OS-os
 description: Custom Bazzite gaming image with all essential tools
 base-image: ghcr.io/ublue-os/bazzite
 image-version: latest
@@ -58,7 +58,9 @@ modules:
 
           # Коммуникации
        
-    
+    image:
+     formats:
+      - iso
           
           # Утилиты
             # аналог Spectacle для GNOME
