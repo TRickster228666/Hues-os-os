@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: template
-description: HUES-OS v1.2 - KDE + Hyprland Gaming Beast
+description: HUES-OS v1.1 - KDE + Hyprland Gaming Beast
 base-image: ghcr.io/ublue-os/bazzite
 image-version: latest
 
@@ -10,8 +10,7 @@ modules:
       - source: system
         destination: /
 
-  # Шрифты (КРИТИЧЕСКИ ВАЖНЫ ДЛЯ HYPRLAND и Waybar)
-- type: fonts
+  - type: fonts
     fonts:
       nerd-fonts:
         - FiraCode
@@ -21,7 +20,7 @@ modules:
     repos:
       copr:
         - atim/starship
-        - solopasha/hyprland # Свежий Hyprland (опционально, но лучше иметь свежий)
+        - solopasha/hyprland
  
     install:
       packages:
@@ -40,22 +39,22 @@ modules:
         - fzf
         - thefuck
         
-        # --- HYPRLAND BASE (Добавляем базу Гиперлэнда) ---
-        - hyprland          # Сам оконный менеджер
-        - waybar            # Верхняя панель (база для Hyprland)
-        - wofi              # Меню запуска приложений (аналог "Пуск")
-        - swaybg            # Для установки обоев
-        - swaylock          # Экран блокировки
-        - swayidle          # Управление простоем (сон)
-        - mako              # Уведомления
-        - kitty             # Терминал (лучший для Hyprland)
-        - polkit-kde        # Агент авторизации (чтобы пароль спрашивал)
-        - qt5-qtwayland     # Чтобы Qt приложения работали в Wayland
+        # --- HYPRLAND BASE ---
+        - hyprland
+        - waybar
+        - wofi
+        - swaybg
+        - swaylock
+        - swayidle
+        - mako
+        - kitty
+        - polkit-kde
+        - qt5-qtwayland
         - qt6-qtwayland
-        - xdg-desktop-portal-hyprland # Для записи экрана и шаринга
-        - grim              # Скриншоты
-        - slurp             # Выделение области скриншота
-        - wl-clipboard      # Работа буфера обмена
+        - xdg-desktop-portal-hyprland
+        - grim
+        - slurp
+        - wl-clipboard
         
         # --- GAMING & DRIVERS ---
         - rocm-hip
@@ -81,13 +80,13 @@ modules:
           - com.valvesoftware.Steam
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
-          - net.davidotek.pupgui2    # ProtonUp-Qt
-          - io.github.ben24.goverlay # MangoHud config
+          - net.davidotek.pupgui2
+          - io.github.ben24.goverlay
           - com.usebottles.bottles
           
           # --- SOCIAL ---
           - org.telegram.desktop
-          - dev.vencord.Vesktop      # Discord
+          - dev.vencord.Vesktop
           
           # --- MEDIA ---
           - org.kde.haruna
@@ -98,6 +97,6 @@ modules:
           - com.github.tchx84.Flatseal
           - org.kde.ark
           - org.kde.filelight
-          - io.github.flattool.Warehouse # ВОТ ЭТА ШТУКА ПОМОЖЕТ УПРАВЛЯТЬ ФЛАТПАКАМИ
+          - io.github.flattool.Warehouse
 
       - scope: user
