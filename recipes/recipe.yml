@@ -4,6 +4,8 @@ description: This is my personal OS image.
 base-image: ghcr.io/ublue-os/silverblue-main
 image-version: 42
 bluebuild --no-sign
+export BLUEBUILD_SIGN_IMAGE="false"
+bluebuild
 modules:
   - type: files
     files:
