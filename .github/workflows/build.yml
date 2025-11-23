@@ -16,7 +16,7 @@ jobs:
 
       - name: Install Consign
         run: |
-          curl -fsSL https://github.com/containers/consign/releases/download/v0.5.2/consign-linux-amd64 -o consign
+          curl -fsSL https://github.com/sigstore/cosign -o consign
           chmod +x consign
 
       - name: Generate keys if missing
