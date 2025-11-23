@@ -17,21 +17,14 @@ modules:
         - JetBrainsMono
 
   - type: dnf
-    repos:   # <--- ИСПРАВЛЕНО: сдвинуто влево
+    repos:
       copr:
         - atim/starship
-        # Убрали solopasha/hyprland — берем стабильный из Fedora
  
-    install: # <--- ИСПРАВЛЕНО: сдвинуто влево
+    install:
       packages:
-        # --- БАЗА ---
-        - git
-        - curl
-        - wget
-        - htop
-        - neovim
+        # --- ТОЛЬКО НОВЫЕ УТИЛИТЫ (которых нет в базе) ---
         - fastfetch
-        - zsh
         - starship
         - zoxide
         - bat
@@ -39,7 +32,7 @@ modules:
         - fzf
         - thefuck
         
-        # --- HYPRLAND (Минимальный набор) ---
+        # --- HYPRLAND STACK ---
         - hyprland
         - waybar
         - wofi
@@ -53,10 +46,10 @@ modules:
         - slurp
         - wl-clipboard
         
-        # --- ОСТАЛЬНОЕ ---
+        # --- МЕДИА ---
         - mpv
 
-    remove:  # <--- ИСПРАВЛЕНО: сдвинуто влево
+    remove:
       packages:
         - firefox
         - firefox-langpacks
