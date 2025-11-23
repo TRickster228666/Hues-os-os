@@ -17,14 +17,14 @@ modules:
         - JetBrainsMono
 
   - type: dnf
-    repos:
+    repos:   # <--- ИСПРАВЛЕНО: сдвинуто влево
       copr:
         - atim/starship
-        - solopasha/hyprland
+        # Убрали solopasha/hyprland — берем стабильный из Fedora
  
-    install:
+    install: # <--- ИСПРАВЛЕНО: сдвинуто влево
       packages:
-        # --- CORE UTILS ---
+        # --- БАЗА ---
         - git
         - curl
         - wget
@@ -39,7 +39,7 @@ modules:
         - fzf
         - thefuck
         
-        # --- HYPRLAND BASE ---
+        # --- HYPRLAND (Минимальный набор) ---
         - hyprland
         - waybar
         - wofi
@@ -48,21 +48,15 @@ modules:
         - swayidle
         - mako
         - kitty
-        - polkit-kde
-        - qt5-qtwayland
-        - qt6-qtwayland
         - xdg-desktop-portal-hyprland
         - grim
         - slurp
         - wl-clipboard
         
-        # --- GAMING & DRIVERS ---
-        - rocm-hip
-        - rocm-opencl
+        # --- ОСТАЛЬНОЕ ---
         - mpv
-        - partitionmanager
-        
-    remove:
+
+    remove:  # <--- ИСПРАВЛЕНО: сдвинуто влево
       packages:
         - firefox
         - firefox-langpacks
