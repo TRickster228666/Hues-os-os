@@ -1,10 +1,9 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: template
-description: This is my personal OS image.
-base-image: ghcr.io/ublue-os/silverblue-main
-image-version: 42
-sign: false
-bluebuild
+name: bazzite-gaming
+description: Custom Bazzite gaming image with all essential tools
+base-image: ghcr.io/ublue-os/bazzite
+image-version: latest
+
 modules:
   - type: files
     files:
@@ -15,10 +14,27 @@ modules:
     repos:
       copr:
         - atim/starship
+        - rmnscnce/ulauncher  # для Ulauncher если нужно
     install:
       packages:
-        - micro
-        - starship
+        # Системные утилиты
+        - git
+        - curl
+        - wget
+        - htop
+        - neovim
+        - fastfetch  # современная замена neofetch
+        - zsh        # мощная оболочка с автодополнением
+        - starship   # красивое приглашение командной строки
+        
+        # Игровое железо AMD
+        - rocm-hip-sdk
+        - rocm-opencl-sdk
+        
+        # Медиа и графика
+        - ffmpeg
+        - gstreamer1-plugins-ugly
+        - gstreamer1-plugins-bad-free
     remove:
       packages:
         - firefox
@@ -29,6 +45,37 @@ modules:
       - notify: true
         scope: system
         install:
-          - org.mozilla.firefox
-          - org.gnome.Loupe
+          # Браузеры
+          - com.brave.Browser
+          - com.microsoft.Edge
+          
+          # Игры и игровые сервисы
+          - com.valvesoftware.Steam
+          - com.heroicgameslauncher.hgl
+          - net.lutris.Lutris
+          
+          # Медиа - ВСЁ В ОДНОМ
+          - io.github.celluloid_player.Celluloid  # видео (лучший для GNOME)
+          - org.gnome.Loupe                      # изображения
+
+          # Коммуникации
+          - com.rambox.Rambox
+    
+          
+          # Утилиты
+          - org.gnome.Screenshot  # аналог Spectacle для GNOME
+          - com.github.tchx84.Flatseal
+
+   
       - scope: user
+
+  - type: shell
+    commands:
+      # Установка Ollama
+      - |-
+        curl -fsSL https://ollama.ai/install.sh | sh
+      
+      # Настройка Zsh как оболочки по умолчанию
+      - |-
+        chsh -s $(which zsh)
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
