@@ -33,8 +33,7 @@ modules:
         
         # Медиа и графика
         - ffmpeg
-        - gstreamer1-plugins-ugly
-        - gstreamer1-plugins-bad-free
+
     remove:
       packages:
         - firefox
