@@ -14,7 +14,7 @@ modules:
     repos:
       copr:
         - atim/starship
-        - rmnscnce/ulauncher  # для Ulauncher если нужно
+ 
     install:
       packages:
         # Системные утилиты
