@@ -28,8 +28,8 @@ modules:
         - starship   # красивое приглашение командной строки
         
         # Игровое железо AMD
-        - rocm-hip-sdk
-        - rocm-opencl-sdk
+        - rocm-hip
+        - rocm-opencl
         
         # Медиа и графика
         - ffmpeg
