@@ -11,12 +11,11 @@ modules:
         destination: /
 
   # Шрифты (КРИТИЧЕСКИ ВАЖНЫ ДЛЯ HYPRLAND и Waybar)
-  - type: fonts
+- type: fonts
     fonts:
       nerd-fonts:
         - FiraCode
         - JetBrainsMono
-        - FontAwesome # Нужен для иконок в баре
 
   - type: dnf
     repos:
