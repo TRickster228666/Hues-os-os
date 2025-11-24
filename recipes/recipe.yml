@@ -10,7 +10,7 @@ modules:
       - source: system
         destination: /
 
-  # 1. Подключаем репозитории
+  # Подключаем репозитории (нужны для драйверов NVIDIA и прочего)
   - type: bling
     install:
       - rpmfusion
@@ -21,26 +21,10 @@ modules:
         - FiraCode
         - JetBrainsMono
 
-  # 2. Этап первый: Утилиты (Самые безопасные пакеты)
   - type: dnf
     install:
       packages:
-        - fastfetch
-        - starship
-        - zoxide
-        - bat
-        - eza
-        - fzf
-        - gamemode
-        - grim
-        - slurp
-        - wl-clipboard
-
-  # 3. Этап второй: Hyprland (Самые сложные пакеты)
-  # Если сборка упадет здесь, мы будем знать, что проблема именно в Hyprland
-  - type: dnf
-    install:
-      packages:
+        # --- HYPRLAND STACK (База) ---
         - hyprland
         - waybar
         - wofi
@@ -49,52 +33,51 @@ modules:
         - swayidle
         - mako
         - xdg-desktop-portal-hyprland
-        # - steam-devices # Временно отключено, часто ломает сборку
+        
+        # --- ВАЖНЫЕ ИНСТРУМЕНТЫ WAYLAND ---
+        - grim          # Скриншоты
+        - slurp         # Выделение области
+        - wl-clipboard  # Буфер обмена
+        
+        # --- УТИЛИТЫ КОНСОЛИ ---
+        - fastfetch
+        - starship
+        - zoxide
+        - eza
+        - fzf
+        - bat
 
-  # Удаление пакетов вынесли отдельно, чтобы не мешать установке
-  # Если здесь будет ошибка, закомментируйте этот блок
-  - type: dnf
-    remove:
-      packages:
-        - firefox
-        - firefox-langpacks
+    # Временно не удаляем Firefox, чтобы не злить установщик
+    # remove:
+    #   packages:
+    #     - firefox
 
   - type: default-flatpaks
     configurations:
       - notify: true
         scope: system
         install:
-          # --- ПЕРЕНЕСЕНО ИЗ DNF (Так надежнее) ---
-          - io.mpv.Mpv           # MPV лучше работает из Flatpak (кодеки включены)
-          - org.mozilla.firefox  # Возвращаем Firefox, но уже как Flatpak
-          
-          # --- TERMINAL ---
-          # Kitty сложно собирается в слоях, через Flatpak безопаснее, 
-          # либо используйте Ptyxis (родной для Fedora)
-          # Если очень нужен нативный Kitty, верните его в DNF, но MPV точно оставьте тут.
-          
-          # --- BROWSERS ---
-          - com.brave.Browser
-          - com.microsoft.Edge
-          
-          # --- GAMING ---
+          # --- ГЛАВНОЕ: ИГРЫ И СОЦСЕТИ (Все тут, все будет работать) ---
           - com.valvesoftware.Steam
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
-          - net.davidotek.pupgui2
           - com.usebottles.bottles
-          
-          # --- SOCIAL ---
+          - dev.vencord.Vesktop         # Твой Дискорд
           - org.telegram.desktop
-          - dev.vencord.Vesktop
           
-          # --- MEDIA ---
+          # --- МЕДИА (MPV тут, чтобы не ломать систему) ---
+          - io.mpv.Mpv
           - org.kde.haruna
-          - org.kde.gwenview
           - com.obsproject.Studio
+          - org.kde.gwenview
           
-          # --- SYSTEM ---
-          - com.github.tchx84.Flatseal
+          # --- БРАУЗЕРЫ ---
+          - com.brave.Browser
+          - com.microsoft.Edge
+          - org.mozilla.firefox
+          
+          # --- СИСТЕМНЫЕ УТИЛИТЫ ---
+          - com.github.tchx84.Flatseal  # Обязательно для настройки прав
           - org.kde.ark
           - org.kde.filelight
           - io.github.flattool.Warehouse
