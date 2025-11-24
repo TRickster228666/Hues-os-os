@@ -19,7 +19,6 @@ modules:
   - type: dnf
     repos:
       copr:
-        # ВЕРНУЛИ ЕГО, так как без него Hyprland не находится
         - solopasha/hyprland
  
     install:
@@ -33,15 +32,8 @@ modules:
         - swayidle
         - mako
         - kitty
-        # xdg-desktop-portal-hyprland тоже может конфликтовать, 
-        # но пока оставим. Если упадет - удалим.
+        # Оставили портал, раз он прошел в прошлый раз
         - xdg-desktop-portal-hyprland 
-        
-        # --- УБРАЛИ КОНФЛИКТНЫЕ ---
-        # - wl-clipboard (Уже есть в Bazzite!)
-        # - grim (Уже есть!)
-        # - slurp (Уже есть!)
-        # - thefuck (Конфликтует с Python)
         
         # --- МЕДИА ---
         - mpv
@@ -65,7 +57,7 @@ modules:
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
           - net.davidotek.pupgui2
-          - io.github.ben24.goverlay
+          # - io.github.ben24.goverlay  <-- УДАЛИЛИ (Поставишь потом руками)
           - com.usebottles.bottles
           
           # --- SOCIAL ---
