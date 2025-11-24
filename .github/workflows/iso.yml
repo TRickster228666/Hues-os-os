@@ -25,7 +25,7 @@ jobs:
           # Тэг версии
           image_tag: latest
           # Название файла, который скачается (например HUES-OS.iso)
-          iso_name: HUES-OS-v1.2.iso
+          iso_name: HUES-OS-os.iso
           # Базовая версия Федоры (Bazzite сейчас на 41, но 40 надежнее для сборщика, это не влияет на версию системы внутри)
           fedora_version: 41
           # Вариант установки (Kinoite = KDE версия Fedora Atomic)
