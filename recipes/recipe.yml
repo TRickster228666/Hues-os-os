@@ -10,11 +10,10 @@ modules:
       - source: system
         destination: /
 
-  # --- ВАЖНО: Добавляем репозитории с драйверами и кодеками ---
-  - type: rpm-fusion
-    repos:
-      - free
-      - nonfree
+  # --- ИСПРАВЛЕНИЕ: Используем bling для установки rpmfusion ---
+  - type: bling
+    install:
+      - rpmfusion  # Это автоматически подключит free и nonfree репозитории
 
   - type: fonts
     fonts:
