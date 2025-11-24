@@ -1,0 +1,42 @@
+name: Build ISO
+
+on:
+  workflow_dispatch: # Это добавит кнопку "Run workflow" ручного запуска
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build ISO
+        uses: jasonn3/build-container-installer@v1.2.4
+        with:
+          # Твой никнейм на GitHub
+          image_repo: ghcr.io/trickster228666
+          # Имя образа (у тебя в recipe.yml стоит 'template', если не менял)
+          image_name: template
+          # Тэг версии
+          image_tag: latest
+          # Название файла, который скачается (например HUES-OS.iso)
+          iso_name: HUES-OS-v1.2.iso
+          # Базовая версия Федоры (Bazzite сейчас на 41, но 40 надежнее для сборщика, это не влияет на версию системы внутри)
+          fedora_version: 41
+          # Вариант установки (Kinoite = KDE версия Fedora Atomic)
+          variant: kinoite
+          
+      - name: Upload ISO to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hues-os-iso
+          path: |
+            *.iso
+            *-CHECKSUM
+          if-no-files-found: error
+          retention-days: 1
