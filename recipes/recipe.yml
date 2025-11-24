@@ -10,12 +10,12 @@ modules:
       - source: system
         destination: /
 
-  # --- ВАЖНО: Добавляем репозитории с драйверами и кодеками ---
+  # Исправление: просто указываем тип, настройки по умолчанию поставят free и nonfree
   - type: rpm-fusion
-    repos:
-      - free
-      - nonfree
- 
+
+  - type: fonts
+    fonts:
+    # ... (далее ваш код без изменений)
 
   - type: fonts
     fonts:
