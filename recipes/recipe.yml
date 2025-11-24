@@ -17,22 +17,12 @@ modules:
         - JetBrainsMono
 
   - type: dnf
-    repos:
-      copr:
-        - atim/starship
- 
     install:
       packages:
-        # --- ТОЛЬКО НОВЫЕ УТИЛИТЫ (которых нет в базе) ---
-        - fastfetch
-        - starship
-        - zoxide
-        - bat
-        - eza
-        - fzf
-        - thefuck
+        # --- ТОЛЬКО ИНСТРУМЕНТЫ, КОТОРЫХ НЕТ В BAZZITE ---
+        - thefuck    # Этого точно нет, ставим
         
-        # --- HYPRLAND STACK ---
+        # --- HYPRLAND PACK ---
         - hyprland
         - waybar
         - wofi
@@ -46,8 +36,8 @@ modules:
         - slurp
         - wl-clipboard
         
-        # --- МЕДИА ---
-        - mpv
+        # УБРАЛИ: starship, fastfetch, zoxide, bat, eza, fzf, mpv
+        # ПРИЧИНА: Они уже есть в системе, их установка ломает сборку!
 
     remove:
       packages:
