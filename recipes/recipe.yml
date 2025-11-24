@@ -10,12 +10,11 @@ modules:
       - source: system
         destination: /
 
-  # Исправление: просто указываем тип, настройки по умолчанию поставят free и nonfree
+  # --- ВАЖНО: Добавляем репозитории с драйверами и кодеками ---
   - type: rpm-fusion
-
-  - type: fonts
-    fonts:
-    # ... (далее ваш код без изменений)
+    repos:
+      - free
+      - nonfree
 
   - type: fonts
     fonts:
@@ -30,13 +29,13 @@ modules:
  
     install:
       packages:
-        # --- БАЗА ДЛЯ ИГР И МЕДИА (Чего нет в чистой Федоре) ---
+        # --- БАЗА ДЛЯ ИГР И МЕДИА ---
         - ffmpeg
         - gstreamer1-plugin-openh264
         - gstreamer1-plugins-bad-free
         - gstreamer1-plugins-ugly-free
-        - steam-devices       # Чтобы работали геймпады
-        - gamemode            # Оптимизация игр
+        - steam-devices
+        - gamemode
         
         # --- HYPRLAND STACK ---
         - hyprland
@@ -60,7 +59,6 @@ modules:
         - bat
         - eza
         - fzf
-        # thefuck лучше ставить через brew, в dnf он часто ломает python
 
     remove:
       packages:
@@ -97,5 +95,3 @@ modules:
           - org.kde.ark
           - org.kde.filelight
           - io.github.flattool.Warehouse
-
-      - scope: user
