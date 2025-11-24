@@ -10,7 +10,7 @@ modules:
       - source: system
         destination: /
 
-  # RPM Fusion нужен для Steam и драйверов, оставляем
+  # 1. Подключаем репозитории
   - type: bling
     install:
       - rpmfusion
@@ -21,23 +21,26 @@ modules:
         - FiraCode
         - JetBrainsMono
 
+  # 2. Этап первый: Утилиты (Самые безопасные пакеты)
   - type: dnf
     install:
       packages:
-        # --- ВРЕМЕННО ОТКЛЮЧЕНО (Поиск источника ошибки) ---
-        # Эти пакеты чаще всего вызывают конфликты версий с базой Fedora
-        # - libavcodec-freeworld
-        # - gstreamer1-plugin-openh264
-        # - gstreamer1-plugins-bad-free
-        # - gstreamer1-plugins-ugly-free
-        
-        # --- ИГРЫ ---
-        # steam-devices иногда требует non-free репо, который может не успеть прогрузиться.
-        # Если сборка пройдет, попробуем включить его обратно.
-        # - steam-devices
+        - fastfetch
+        - starship
+        - zoxide
+        - bat
+        - eza
+        - fzf
         - gamemode
-        
-        # --- HYPRLAND STACK ---
+        - grim
+        - slurp
+        - wl-clipboard
+
+  # 3. Этап второй: Hyprland (Самые сложные пакеты)
+  # Если сборка упадет здесь, мы будем знать, что проблема именно в Hyprland
+  - type: dnf
+    install:
+      packages:
         - hyprland
         - waybar
         - wofi
@@ -45,21 +48,12 @@ modules:
         - swaylock
         - swayidle
         - mako
-        - kitty
         - xdg-desktop-portal-hyprland
-        - grim
-        - slurp
-        - wl-clipboard
-        
-        # --- УТИЛИТЫ ---
-        - mpv
-        - fastfetch
-        - starship
-        - zoxide
-        - bat
-        - eza
-        - fzf
+        # - steam-devices # Временно отключено, часто ломает сборку
 
+  # Удаление пакетов вынесли отдельно, чтобы не мешать установке
+  # Если здесь будет ошибка, закомментируйте этот блок
+  - type: dnf
     remove:
       packages:
         - firefox
@@ -70,6 +64,15 @@ modules:
       - notify: true
         scope: system
         install:
+          # --- ПЕРЕНЕСЕНО ИЗ DNF (Так надежнее) ---
+          - io.mpv.Mpv           # MPV лучше работает из Flatpak (кодеки включены)
+          - org.mozilla.firefox  # Возвращаем Firefox, но уже как Flatpak
+          
+          # --- TERMINAL ---
+          # Kitty сложно собирается в слоях, через Flatpak безопаснее, 
+          # либо используйте Ptyxis (родной для Fedora)
+          # Если очень нужен нативный Kitty, верните его в DNF, но MPV точно оставьте тут.
+          
           # --- BROWSERS ---
           - com.brave.Browser
           - com.microsoft.Edge
