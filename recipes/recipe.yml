@@ -1,8 +1,10 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: template
-description: HUES-OS v1.2 - Pure Fedora Kinoite + Hyprland
+description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland
 base-image: ghcr.io/ublue-os/kinoite-main
-image-version: latest
+# ВАЖНО: Версия 41 - стабильная. На ней есть Hyprland и все пакеты.
+# Latest (43) сейчас сломана для Hyprland.
+image-version: 41
 
 modules:
   - type: files
@@ -10,7 +12,7 @@ modules:
       - source: system
         destination: /
 
-  # Подключаем репозитории (нужны для драйверов NVIDIA и прочего)
+  # Подключаем RPM Fusion (для драйверов NVIDIA и кодеков)
   - type: bling
     install:
       - rpmfusion
@@ -24,7 +26,8 @@ modules:
   - type: dnf
     install:
       packages:
-        # --- HYPRLAND STACK (База) ---
+        # --- HYPRLAND STACK ---
+        # В Fedora 41 эти пакеты есть и работают стабильно
         - hyprland
         - waybar
         - wofi
@@ -34,12 +37,12 @@ modules:
         - mako
         - xdg-desktop-portal-hyprland
         
-        # --- ВАЖНЫЕ ИНСТРУМЕНТЫ WAYLAND ---
-        - grim          # Скриншоты
-        - slurp         # Выделение области
-        - wl-clipboard  # Буфер обмена
+        # --- ИНСТРУМЕНТЫ WAYLAND ---
+        - grim
+        - slurp
+        - wl-clipboard
         
-        # --- УТИЛИТЫ КОНСОЛИ ---
+        # --- КОНСОЛЬНЫЕ УТИЛИТЫ ---
         - fastfetch
         - starship
         - zoxide
@@ -47,25 +50,28 @@ modules:
         - fzf
         - bat
 
-    # Временно не удаляем Firefox, чтобы не злить установщик
-    # remove:
-    #   packages:
-    #     - firefox
+    # Удаляем системный Firefox, так как ставим его через Flatpak
+    remove:
+      packages:
+        - firefox
+        - firefox-langpacks
 
   - type: default-flatpaks
     configurations:
       - notify: true
         scope: system
         install:
-          # --- ГЛАВНОЕ: ИГРЫ И СОЦСЕТИ (Все тут, все будет работать) ---
+          # --- ИГРЫ (Gamemode и Steam-devices подтянутся автоматически или поставишь вручную) ---
           - com.valvesoftware.Steam
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
           - com.usebottles.bottles
-          - dev.vencord.Vesktop         # Твой Дискорд
+          
+          # --- ОБЩЕНИЕ ---
+          - dev.vencord.Vesktop
           - org.telegram.desktop
           
-          # --- МЕДИА (MPV тут, чтобы не ломать систему) ---
+          # --- МЕДИА (MPV здесь работает идеально со всеми кодеками) ---
           - io.mpv.Mpv
           - org.kde.haruna
           - com.obsproject.Studio
@@ -77,7 +83,7 @@ modules:
           - org.mozilla.firefox
           
           # --- СИСТЕМНЫЕ УТИЛИТЫ ---
-          - com.github.tchx84.Flatseal  # Обязательно для настройки прав
+          - com.github.tchx84.Flatseal
           - org.kde.ark
           - org.kde.filelight
           - io.github.flattool.Warehouse
