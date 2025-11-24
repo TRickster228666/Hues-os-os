@@ -10,10 +10,10 @@ modules:
       - source: system
         destination: /
 
-  # --- ИСПРАВЛЕНИЕ: Используем bling для установки rpmfusion ---
+  # RPM Fusion нужен для Steam и драйверов, оставляем
   - type: bling
     install:
-      - rpmfusion  # Это автоматически подключит free и nonfree репозитории
+      - rpmfusion
 
   - type: fonts
     fonts:
@@ -22,16 +22,19 @@ modules:
         - JetBrainsMono
 
   - type: dnf
-    # Мы убрали блок repos/copr, так как Hyprland есть в Fedora
     install:
       packages:
-        # --- БАЗА ДЛЯ ИГР И МЕДИА ---
-        # ffmpeg заменен на libavcodec-freeworld во избежание конфликтов с ffmpeg-free
-        - libavcodec-freeworld
-        - gstreamer1-plugin-openh264
-        - gstreamer1-plugins-bad-free
-        - gstreamer1-plugins-ugly-free
-        - steam-devices
+        # --- ВРЕМЕННО ОТКЛЮЧЕНО (Поиск источника ошибки) ---
+        # Эти пакеты чаще всего вызывают конфликты версий с базой Fedora
+        # - libavcodec-freeworld
+        # - gstreamer1-plugin-openh264
+        # - gstreamer1-plugins-bad-free
+        # - gstreamer1-plugins-ugly-free
+        
+        # --- ИГРЫ ---
+        # steam-devices иногда требует non-free репо, который может не успеть прогрузиться.
+        # Если сборка пройдет, попробуем включить его обратно.
+        # - steam-devices
         - gamemode
         
         # --- HYPRLAND STACK ---
