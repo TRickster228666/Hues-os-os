@@ -1,9 +1,7 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: template
-description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland
+description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland (Clean Build)
 base-image: ghcr.io/ublue-os/kinoite-main
-# ВАЖНО: Версия 41 - стабильная. На ней есть Hyprland и все пакеты.
-# Latest (43) сейчас сломана для Hyprland.
 image-version: 41
 
 modules:
@@ -12,7 +10,7 @@ modules:
       - source: system
         destination: /
 
-  # Подключаем RPM Fusion (для драйверов NVIDIA и кодеков)
+  # RPM Fusion оставляем (драйверы AMD и кодеки будут доступны)
   - type: bling
     install:
       - rpmfusion
@@ -26,8 +24,7 @@ modules:
   - type: dnf
     install:
       packages:
-        # --- HYPRLAND STACK ---
-        # В Fedora 41 эти пакеты есть и работают стабильно
+        # --- HYPRLAND CORE (Самое важное) ---
         - hyprland
         - waybar
         - wofi
@@ -37,31 +34,31 @@ modules:
         - mako
         - xdg-desktop-portal-hyprland
         
-        # --- ИНСТРУМЕНТЫ WAYLAND ---
+        # --- ИНСТРУМЕНТЫ ---
         - grim
         - slurp
-        - wl-clipboard
+        # - wl-clipboard  <-- УДАЛЕНО: Уже есть в системе
         
-        # --- КОНСОЛЬНЫЕ УТИЛИТЫ ---
+        # --- УТИЛИТЫ ---
         - fastfetch
-        - starship
-        - zoxide
-        - eza
-        - fzf
         - bat
+        - zoxide
+        # - starship      <-- УДАЛЕНО: Вызывало ошибку поиска, поставишь вручную
+        # - eza           <-- УДАЛЕНО: Вызывало ошибку
+        # - fzf           <-- УДАЛЕНО: Уже есть в системе
 
-    # Удаляем системный Firefox, так как ставим его через Flatpak
-    remove:
-      packages:
-        - firefox
-        - firefox-langpacks
+    # Удаление Firefox иногда вызывает проблемы зависимостей, 
+    # временно закомментируем, чтобы точно собрать образ.
+    # remove:
+    #   packages:
+    #     - firefox
 
   - type: default-flatpaks
     configurations:
       - notify: true
         scope: system
         install:
-          # --- ИГРЫ (Gamemode и Steam-devices подтянутся автоматически или поставишь вручную) ---
+          # --- ИГРЫ ---
           - com.valvesoftware.Steam
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
@@ -71,7 +68,7 @@ modules:
           - dev.vencord.Vesktop
           - org.telegram.desktop
           
-          # --- МЕДИА (MPV здесь работает идеально со всеми кодеками) ---
+          # --- МЕДИА ---
           - io.mpv.Mpv
           - org.kde.haruna
           - com.obsproject.Studio
@@ -82,7 +79,7 @@ modules:
           - com.microsoft.Edge
           - org.mozilla.firefox
           
-          # --- СИСТЕМНЫЕ УТИЛИТЫ ---
+          # --- СИСТЕМА ---
           - com.github.tchx84.Flatseal
           - org.kde.ark
           - org.kde.filelight
