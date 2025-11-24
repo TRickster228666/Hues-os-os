@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: template
-description: HUES-OS v1.1 - KDE + Hyprland Gaming Beast
-base-image: ghcr.io/ublue-os/bazzite
+description: HUES-OS v1.2 - Pure Fedora Kinoite + Hyprland
+base-image: ghcr.io/ublue-os/kinoite-main
 image-version: latest
 
 modules:
@@ -9,6 +9,13 @@ modules:
     files:
       - source: system
         destination: /
+
+  # --- ВАЖНО: Добавляем репозитории с драйверами и кодеками ---
+  - type: rpm-fusion
+    repos:
+      - free
+      - nonfree
+      - atomic
 
   - type: fonts
     fonts:
@@ -23,7 +30,15 @@ modules:
  
     install:
       packages:
-        # --- HYPRLAND CORE ---
+        # --- БАЗА ДЛЯ ИГР И МЕДИА (Чего нет в чистой Федоре) ---
+        - ffmpeg
+        - gstreamer1-plugin-openh264
+        - gstreamer1-plugins-bad-free
+        - gstreamer1-plugins-ugly-free
+        - steam-devices       # Чтобы работали геймпады
+        - gamemode            # Оптимизация игр
+        
+        # --- HYPRLAND STACK ---
         - hyprland
         - waybar
         - wofi
@@ -32,11 +47,20 @@ modules:
         - swayidle
         - mako
         - kitty
-        # Оставили портал, раз он прошел в прошлый раз
-        - xdg-desktop-portal-hyprland 
+        - xdg-desktop-portal-hyprland
+        - grim
+        - slurp
+        - wl-clipboard
         
-        # --- МЕДИА ---
+        # --- УТИЛИТЫ ---
         - mpv
+        - fastfetch
+        - starship
+        - zoxide
+        - bat
+        - eza
+        - fzf
+        # thefuck лучше ставить через brew, в dnf он часто ломает python
 
     remove:
       packages:
@@ -57,7 +81,6 @@ modules:
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
           - net.davidotek.pupgui2
-          # - io.github.ben24.goverlay  <-- УДАЛИЛИ (Поставишь потом руками)
           - com.usebottles.bottles
           
           # --- SOCIAL ---
