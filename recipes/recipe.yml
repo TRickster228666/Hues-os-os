@@ -15,7 +15,7 @@ modules:
     repos:
       - free
       - nonfree
-      - atomic
+ 
 
   - type: fonts
     fonts:
