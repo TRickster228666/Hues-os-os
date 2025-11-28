@@ -11,18 +11,14 @@ modules:
       - source: system
         destination: /
 
-  # 2. Подключаем RPM Fusion и Just (используем локальный модуль)
-  - type: dnf
-    source: local
-    install:
-      packages:
-        - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-        - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-        - just
-
-  # 3. Включаем COPR репозитории (через скрипт с snippets)
+  # 2. Подключаем RPM Fusion и устанавливаем Just
   - type: script
-    source: local
+    snippets:
+      - dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+      - dnf install -y just
+
+  # 3. Включаем COPR репозитории
+  - type: script
     snippets:
       - dnf -y copr enable solopasha/hyprland
       - dnf -y copr enable atim/topgrade
@@ -100,6 +96,5 @@ modules:
 
   # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
   - type: script
-    source: local
     snippets:
       - chmod +x /usr/bin/hues-*
