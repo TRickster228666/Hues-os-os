@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json  
 name: hues-os
 description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland + AI Core
 base-image: ghcr.io/ublue-os/kinoite-main
@@ -12,10 +12,11 @@ modules:
         destination: /
 
   # 2. Подключаем RPM Fusion и Just
-  - type: bling
+  - type: dnf
     install:
-      - rpmfusion
-      - ublue-os-just
+      packages:
+        - rpmfusion
+        - ublue-os-just
 
   # 3. Шрифты
   - type: fonts
@@ -24,13 +25,11 @@ modules:
         - FiraCode
         - JetBrainsMono
 
-  # 4. Включаем COPR репозитории (Через скрипт, так как модуля copr нет)
-  # Это должно идти ПЕРЕД установкой пакетов!
+  # 4. Включаем COPR репозитории
   - type: script
-    name: enable-coprs
-    snippets:
-      - dnf -y copr enable solopasha/hyprland
-      - dnf -y copr enable atim/topgrade
+    content: |
+      dnf -y copr enable solopasha/hyprland
+      dnf -y copr enable atim/topgrade
 
   # 5. Установка пакетов
   - type: dnf
@@ -51,7 +50,7 @@ modules:
         - jq
         - libnotify
         - wl-clipboard
-        - cliphist      # Теперь установится (из solopasha)
+        - cliphist
         
         # --- ИНСТРУМЕНТЫ ---
         - grim
@@ -66,7 +65,7 @@ modules:
         - fastfetch
         - bat
         - zoxide
-        - topgrade      # Теперь установится (из atim)
+        - topgrade
         - ripgrep
         - kitty
 
@@ -96,8 +95,6 @@ modules:
           - io.github.mkiol.BoxBuddy
 
   # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
-  # Обязательно, так как при создании через сайт GitHub права теряются
   - type: script
-    name: permissions-fix
-    snippets:
-      - chmod +x /usr/bin/hues-*
+    content: |
+      chmod +x /usr/bin/hues-*
