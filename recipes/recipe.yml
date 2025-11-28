@@ -12,24 +12,25 @@ modules:
         destination: /
 
   # 2. Подключаем RPM Fusion и Just
-  - type: dnf
-    install:
-      packages:
-        - rpmfusion
-        - ublue-os-just
+  - type: script
+    content: |
+      # Включаем RPM Fusion
+      dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+      # Устанавливаем just
+      dnf install -y just
 
-  # 3. Шрифты
+  # 3. Включаем COPR репозитории
+  - type: script
+    content: |
+      dnf -y copr enable solopasha/hyprland
+      dnf -y copr enable atim/topgrade
+
+  # 4. Шрифты
   - type: fonts
     fonts:
       nerd-fonts:
         - FiraCode
         - JetBrainsMono
-
-  # 4. Включаем COPR репозитории
-  - type: script
-    snippets:
-      - dnf -y copr enable solopasha/hyprland
-      - dnf -y copr enable atim/topgrade
 
   # 5. Установка пакетов
   - type: dnf
@@ -68,6 +69,7 @@ modules:
         - topgrade
         - ripgrep
         - kitty
+        - ollama
 
   # 6. Flatpak приложения
   - type: default-flatpaks
@@ -96,5 +98,5 @@ modules:
 
   # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
   - type: script
-    snippets:
-      - chmod +x /usr/bin/hues-*
+    content: |
+      chmod +x /usr/bin/hues-*
