@@ -11,7 +11,7 @@ modules:
       - source: system
         destination: /
 
-  # 2. Устанавливаем Just (RPM Fusion нужно включать вручную после установки)
+  # 2. Устанавливаем Just
   - type: dnf
     install:
       packages:
@@ -29,7 +29,7 @@ modules:
         - FiraCode
         - JetBrainsMono
 
-  # 5. Установка пакетов с пропуском недоступных
+  # 5. Установка основных пакетов (без проблемных)
   - type: dnf
     install:
       packages:
@@ -48,7 +48,6 @@ modules:
         - jq
         - libnotify
         - wl-clipboard
-        - cliphist
         
         # --- ИНСТРУМЕНТЫ ---
         - grim
@@ -65,25 +64,32 @@ modules:
         - zoxide
         - ripgrep
         - kitty
-      options:
-        - --skip-unavailable
+
+  # 5.1. Установка проблемных пакетов с --skip-unavailable
+  - type: script
+    snippets:
+      - dnf install -y --skip-unavailable cliphist topgrade
 
   # 6. Установка Topgrade и Ollama через скрипты
   - type: script
     snippets:
-      # Установка Topgrade
-      - curl -L https://github.com/topgrade-rs/topgrade/releases/latest/download/topgrade-x86_64-unknown-linux-gnu.tar.gz -o /tmp/topgrade.tar.gz
-      - tar xzf /tmp/topgrade.tar.gz -C /tmp
-      - mkdir -p /usr/local/bin
-      - mv /tmp/topgrade /usr/local/bin/
-      - chmod +x /usr/local/bin/topgrade
-      - rm -f /tmp/topgrade.tar.gz
+      # Установка Topgrade если не установился через dnf
+      - if ! command -v topgrade &> /dev/null; then
+          curl -L https://github.com/topgrade-rs/topgrade/releases/latest/download/topgrade-x86_64-unknown-linux-gnu.tar.gz -o /tmp/topgrade.tar.gz
+          tar xzf /tmp/topgrade.tar.gz -C /tmp
+          mkdir -p /usr/local/bin
+          mv /tmp/topgrade /usr/local/bin/
+          chmod +x /usr/local/bin/topgrade
+          rm -f /tmp/topgrade.tar.gz
+        fi
       
       # Установка Ollama
-      - curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh
-      - chmod +x /tmp/install-ollama.sh
-      - /tmp/install-ollama.sh
-      - rm -f /tmp/install-ollama.sh
+      - if ! command -v ollama &> /dev/null; then
+          curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh
+          chmod +x /tmp/install-ollama.sh
+          /tmp/install-ollama.sh
+          rm -f /tmp/install-ollama.sh
+        fi
 
   # 7. Flatpak приложения
   - type: default-flatpaks
@@ -114,3 +120,4 @@ modules:
   - type: script
     snippets:
       - find /usr/bin -name "hues-*" -exec chmod +x {} \;
+      - chmod +x /usr/bin/hues-*
