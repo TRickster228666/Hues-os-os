@@ -27,9 +27,9 @@ modules:
 
   # 4. Включаем COPR репозитории
   - type: script
-    content: |
-      dnf -y copr enable solopasha/hyprland
-      dnf -y copr enable atim/topgrade
+    snippets:
+      - dnf -y copr enable solopasha/hyprland
+      - dnf -y copr enable atim/topgrade
 
   # 5. Установка пакетов
   - type: dnf
@@ -96,5 +96,5 @@ modules:
 
   # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
   - type: script
-    content: |
-      chmod +x /usr/bin/hues-*
+    snippets:
+      - chmod +x /usr/bin/hues-*
