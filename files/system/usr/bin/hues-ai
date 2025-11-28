@@ -1,0 +1,41 @@
+#!/bin/bash
+# HUES-AI: Генератор команд через Ollama
+# Зависимости: gum, ollama, wl-clipboard
+
+if ! pgrep -x "ollama" > /dev/null; then
+    notify-send "HUES-AI" "Запускаю Ollama..."
+    ollama serve > /dev/null 2>&1 & disown
+    sleep 2
+fi
+
+# Берем первую модель (или впиши свою, напр. MODEL="llama3")
+MODEL=$(ollama list | awk 'NR==2 {print $1}' | cut -d: -f1)
+[ -z "$MODEL" ] && { gum style --foreground 196 "Нет моделей Ollama!"; sleep 3; exit 1; }
+
+# Интерфейс
+clear
+gum style --foreground 212 --border double --padding "0 2" "🤖 HUES-AI ($MODEL)"
+PROMPT=$(gum input --placeholder "Напиши задачу (напр: Обнови систему, Установи Steam)...")
+[ -z "$PROMPT" ] && exit 0
+
+# Системный промпт
+SYS_MSG="You are a Fedora Linux expert using Hyprland.
+User Request: '$PROMPT'
+Task: Output ONLY a single executable bash command.
+Rules: No markdown, no quotes, no chat.
+Preferred tools: dnf, flatpak, rpm-ostree, grim, nmcli.
+If dangerous, echo 'I refuse'.
+"
+
+# Генерация
+CMD=$(gum spin --title "Думаю..." -- ollama run "$MODEL" "$SYS_MSG" | sed 's/`//g' | xargs)
+
+# Подтверждение
+gum style --foreground 212 "Предлагаю выполнить:"
+gum style --foreground 255 --border rounded --padding "1 2" "$CMD"
+
+if gum confirm "Выполнить?"; then
+    echo "$CMD" | wl-copy
+    eval "$CMD"
+    gum style --foreground 70 "Готово! Нажми Enter." && read
+fi
