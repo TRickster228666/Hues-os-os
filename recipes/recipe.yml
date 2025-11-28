@@ -26,6 +26,9 @@ modules:
       packages:
         # --- HYPRLAND CORE (Самое важное) ---
         - hyprland
+        - cliphist
+        - gamemode
+        -topgrade
         - waybar
         - wofi
         - swaybg
