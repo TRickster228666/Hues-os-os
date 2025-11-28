@@ -5,33 +5,34 @@ base-image: ghcr.io/ublue-os/kinoite-main
 image-version: 41
 
 modules:
-  # 1. Копируем твои скрипты (hues-ai, hues-startup и др.)
+  # 1. Копируем файлы (твои скрипты hues-ai и конфиги)
   - type: files
     files:
       - source: system
         destination: /
 
-  # 2. RPM Fusion (Драйверы и кодеки)
+  # 2. Подключаем RPM Fusion и Just
   - type: bling
     install:
       - rpmfusion
-      - ublue-os-just # Полезные команды обслуживания
+      - ublue-os-just
 
-  # 3. Шрифты (Нужны для красивого терминала и Waybar)
+  # 3. Шрифты
   - type: fonts
     fonts:
       nerd-fonts:
         - FiraCode
         - JetBrainsMono
 
-  # 4. Дополнительные репозитории (COPR)
-  # ВАЖНО: Отступы должны быть ровными!
-  - type: copr
-    repos:
-      - solopasha/hyprland  # Hyprland, cliphist, hyprlock, hypridle
-      - atim/topgrade       # Утилита topgrade
+  # 4. Включаем COPR репозитории (Через скрипт, так как модуля copr нет)
+  # Это должно идти ПЕРЕД установкой пакетов!
+  - type: script
+    name: enable-coprs
+    snippets:
+      - dnf -y copr enable solopasha/hyprland
+      - dnf -y copr enable atim/topgrade
 
-  # 5. Основной список пакетов
+  # 5. Установка пакетов
   - type: dnf
     install:
       packages:
@@ -40,67 +41,63 @@ modules:
         - waybar
         - wofi
         - swaybg
-        - mako                # Уведомления
+        - mako
         - xdg-desktop-portal-hyprland
-        
-        # Замена старых sway-утилит на новые (поддерживают эффекты)
-        - hyprlock            # Экран блокировки
-        - hypridle            # Авто-сон
+        - hyprlock
+        - hypridle
 
-        # --- ЗАВИСИМОСТИ ДЛЯ HUES-AI И СКРИПТОВ (ВАЖНО!) ---
-        - gum                 # Рисует меню и диалоги (нужен для hues-ai)
-        - jq                  # Обработка JSON (нужен для скриптов)
-        - libnotify           # Команда notify-send (для уведомлений от скриптов)
-        - wl-clipboard        # Работа с буфером обмена
-        - cliphist            # История буфера (берется из copr)
+        # --- ЗАВИСИМОСТИ ДЛЯ СКРИПТОВ ---
+        - gum
+        - jq
+        - libnotify
+        - wl-clipboard
+        - cliphist      # Теперь установится (из solopasha)
         
         # --- ИНСТРУМЕНТЫ ---
-        - grim                # Скриншоты
-        - slurp               # Выделение области
-        - udiskie             # Авто-монтирование флешек
-        - polkit-gnome        # Окно ввода пароля (GUI)
-        - nwg-look            # Настройка GTK тем
-        - qt5ct               # Настройка QT тем
+        - grim
+        - slurp
+        - udiskie
+        - polkit-gnome
+        - nwg-look
+        - qt5ct
         - qt6ct
         
-        # --- ТЕРМИНАЛЬНЫЕ УТИЛИТЫ ---
-        - fastfetch           # Красивое инфо о системе (для hues-startup)
-        - bat                 # cat с подсветкой
-        - zoxide              # умный cd
-        - topgrade            # Обновление всей системы одной командой
-        - ripgrep             # Быстрый поиск текста
-        - kitty               # Терминал (лучше, чем Konsole для Hyprland)
+        # --- CLI ---
+        - fastfetch
+        - bat
+        - zoxide
+        - topgrade      # Теперь установится (из atim)
+        - ripgrep
+        - kitty
 
-  # 6. Приложения Flatpak
+  # 6. Flatpak приложения
   - type: default-flatpaks
     configurations:
       - notify: true
         scope: system
         install:
-          # --- ИГРЫ ---
           - com.valvesoftware.Steam
           - net.lutris.Lutris
           - com.heroicgameslauncher.hgl
           - com.usebottles.bottles
-          
-          # --- ОБЩЕНИЕ ---
           - dev.vencord.Vesktop
           - org.telegram.desktop
-          
-          # --- МЕДИА ---
           - io.mpv.Mpv
           - org.kde.haruna
           - com.obsproject.Studio
           - org.kde.gwenview
-          
-          # --- БРАУЗЕРЫ ---
           - com.brave.Browser
           - com.microsoft.Edge
           - org.mozilla.firefox
-          
-          # --- СИСТЕМА ---
           - com.github.tchx84.Flatseal
           - org.kde.ark
           - org.kde.filelight
           - io.github.flattool.Warehouse
-          - io.github.mkiol.BoxBuddy  # Удобное управление контейнерами
+          - io.github.mkiol.BoxBuddy
+
+  # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
+  # Обязательно, так как при создании через сайт GitHub права теряются
+  - type: script
+    name: permissions-fix
+    snippets:
+      - chmod +x /usr/bin/hues-*
