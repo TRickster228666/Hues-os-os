@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json  
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: hues-os
 description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland + AI Core
 base-image: ghcr.io/ublue-os/kinoite-main
@@ -11,17 +11,16 @@ modules:
       - source: system
         destination: /
 
-  # 2. Подключаем RPM Fusion и устанавливаем Just
-  - type: script
-    snippets:
-      - dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-      - dnf install -y just
+  # 2. Устанавливаем Just (RPM Fusion нужно включать вручную после установки)
+  - type: dnf
+    install:
+      packages:
+        - just
 
-  # 3. Включаем COPR репозитории (только solopasha/hyprland)
+  # 3. Включаем COPR репозитории (только рабочий)
   - type: script
     snippets:
-      - dnf -y copr enable solopasha/hyprland
-      # - dnf -y copr enable atim/topgrade  # Закомментировано из-за ошибки 404
+      - dnf -y copr enable solopasha/hyprland || true
 
   # 4. Шрифты
   - type: fonts
@@ -30,7 +29,7 @@ modules:
         - FiraCode
         - JetBrainsMono
 
-  # 5. Установка пакетов
+  # 5. Установка пакетов с пропуском недоступных
   - type: dnf
     install:
       packages:
@@ -55,7 +54,7 @@ modules:
         - grim
         - slurp
         - udiskie
-        - polkit-gnome
+        - polkit-gnome-authentication-agent-1
         - nwg-look
         - qt5ct
         - qt6ct
@@ -64,12 +63,29 @@ modules:
         - fastfetch
         - bat
         - zoxide
-        - topgrade  # Устанавливаем напрямую, а не из COPR
         - ripgrep
         - kitty
-        - ollama
+      options:
+        - --skip-unavailable
 
-  # 6. Flatpak приложения
+  # 6. Установка Topgrade и Ollama через скрипты
+  - type: script
+    snippets:
+      # Установка Topgrade
+      - curl -L https://github.com/topgrade-rs/topgrade/releases/latest/download/topgrade-x86_64-unknown-linux-gnu.tar.gz -o /tmp/topgrade.tar.gz
+      - tar xzf /tmp/topgrade.tar.gz -C /tmp
+      - mkdir -p /usr/local/bin
+      - mv /tmp/topgrade /usr/local/bin/
+      - chmod +x /usr/local/bin/topgrade
+      - rm -f /tmp/topgrade.tar.gz
+      
+      # Установка Ollama
+      - curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh
+      - chmod +x /tmp/install-ollama.sh
+      - /tmp/install-ollama.sh
+      - rm -f /tmp/install-ollama.sh
+
+  # 7. Flatpak приложения
   - type: default-flatpaks
     configurations:
       - notify: true
@@ -94,7 +110,7 @@ modules:
           - io.github.flattool.Warehouse
           - io.github.mkiol.BoxBuddy
 
-  # 7. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
+  # 8. ФИНАЛЬНЫЙ ШТРИХ: Делаем скрипты исполняемыми
   - type: script
     snippets:
-      - chmod +x /usr/bin/hues-*
+      - find /usr/bin -name "hues-*" -exec chmod +x {} \;
