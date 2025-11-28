@@ -1,61 +1,77 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: template
-description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland (Clean Build)
+name: hues-os
+description: HUES-OS v1.2 - Stable Fedora 41 + Hyprland + AI Core
 base-image: ghcr.io/ublue-os/kinoite-main
 image-version: 41
 
 modules:
+  # 1. Копируем твои скрипты (hues-ai, hues-startup и др.)
   - type: files
     files:
       - source: system
         destination: /
 
-  # RPM Fusion оставляем (драйверы AMD и кодеки будут доступны)
+  # 2. RPM Fusion (Драйверы и кодеки)
   - type: bling
     install:
       - rpmfusion
+      - ublue-os-just # Полезные команды обслуживания
 
+  # 3. Шрифты (Нужны для красивого терминала и Waybar)
   - type: fonts
     fonts:
       nerd-fonts:
         - FiraCode
         - JetBrainsMono
 
+  # 4. Дополнительные репозитории (COPR)
+  # ВАЖНО: Отступы должны быть ровными!
+  - type: copr
+    repos:
+      - solopasha/hyprland  # Hyprland, cliphist, hyprlock, hypridle
+      - atim/topgrade       # Утилита topgrade
+
+  # 5. Основной список пакетов
   - type: dnf
     install:
       packages:
-        # --- HYPRLAND CORE (Самое важное) ---
+        # --- HYPRLAND CORE ---
         - hyprland
-        - cliphist
-        - gamemode
-        - topgrade
         - waybar
         - wofi
         - swaybg
-        - swaylock
-        - swayidle
-        - mako
+        - mako                # Уведомления
         - xdg-desktop-portal-hyprland
         
-        # --- ИНСТРУМЕНТЫ ---
-        - grim
-        - slurp
-        # - wl-clipboard  <-- УДАЛЕНО: Уже есть в системе
+        # Замена старых sway-утилит на новые (поддерживают эффекты)
+        - hyprlock            # Экран блокировки
+        - hypridle            # Авто-сон
+
+        # --- ЗАВИСИМОСТИ ДЛЯ HUES-AI И СКРИПТОВ (ВАЖНО!) ---
+        - gum                 # Рисует меню и диалоги (нужен для hues-ai)
+        - jq                  # Обработка JSON (нужен для скриптов)
+        - libnotify           # Команда notify-send (для уведомлений от скриптов)
+        - wl-clipboard        # Работа с буфером обмена
+        - cliphist            # История буфера (берется из copr)
         
-        # --- УТИЛИТЫ ---
-        - fastfetch
-        - bat
-        - zoxide
-        # - starship      <-- УДАЛЕНО: Вызывало ошибку поиска, поставишь вручную
-        # - eza           <-- УДАЛЕНО: Вызывало ошибку
-        # - fzf           <-- УДАЛЕНО: Уже есть в системе
+        # --- ИНСТРУМЕНТЫ ---
+        - grim                # Скриншоты
+        - slurp               # Выделение области
+        - udiskie             # Авто-монтирование флешек
+        - polkit-gnome        # Окно ввода пароля (GUI)
+        - nwg-look            # Настройка GTK тем
+        - qt5ct               # Настройка QT тем
+        - qt6ct
+        
+        # --- ТЕРМИНАЛЬНЫЕ УТИЛИТЫ ---
+        - fastfetch           # Красивое инфо о системе (для hues-startup)
+        - bat                 # cat с подсветкой
+        - zoxide              # умный cd
+        - topgrade            # Обновление всей системы одной командой
+        - ripgrep             # Быстрый поиск текста
+        - kitty               # Терминал (лучше, чем Konsole для Hyprland)
 
-    # Удаление Firefox иногда вызывает проблемы зависимостей, 
-    # временно закомментируем, чтобы точно собрать образ.
-    # remove:
-    #   packages:
-    #     - firefox
-
+  # 6. Приложения Flatpak
   - type: default-flatpaks
     configurations:
       - notify: true
@@ -87,3 +103,4 @@ modules:
           - org.kde.ark
           - org.kde.filelight
           - io.github.flattool.Warehouse
+          - io.github.mkiol.BoxBuddy  # Удобное управление контейнерами
