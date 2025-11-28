@@ -1,0 +1,21 @@
+#!/bin/bash
+sleep 2 # Ждем прогрузку графики
+clear
+fastfetch --logo none --structure Title:Separator:OS:Host:Uptime:Memory
+
+echo ""
+gum style --foreground 212 "⚡ HUES-OS SYSTEM CHECK"
+
+# Проверки
+pgrep -x "ollama" >/dev/null && S_AI="ONLINE" || S_AI="OFFLINE"
+ping -c 1 8.8.8.8 >/dev/null && S_NET="ONLINE" || S_NET="OFFLINE"
+
+echo "AI Core: $S_AI | Network: $S_NET"
+echo ""
+
+ACTION=$(gum choose --timeout=5s --header "Действие (5с авто-выход):" "🤖 Спросить ИИ" "🚀 Обновить все" "💻 Рабочий стол")
+
+case $ACTION in
+    "🤖 Спросить ИИ") hues-ai ;;
+    "🚀 Обновить все") gum spin --title "Обновление..." -- topgrade ;;
+esac
