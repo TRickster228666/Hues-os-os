@@ -28,7 +28,7 @@ modules:
         - hyprland
         - cliphist
         - gamemode
-        -topgrade
+        - topgrade
         - waybar
         - wofi
         - swaybg
