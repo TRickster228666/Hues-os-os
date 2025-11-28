@@ -1,0 +1,13 @@
+#!/bin/bash
+STATE="/tmp/hues_gamemode"
+if [ -f "$STATE" ]; then
+    hyprctl reload
+    notify-send "Gaming Mode" "OFF 🛑"
+    rm "$STATE"
+else
+    hyprctl keyword decorations:blur:enabled 0
+    hyprctl keyword decorations:drop_shadow:enabled 0
+    hyprctl keyword animations:enabled 0
+    notify-send "Gaming Mode" "ON 🚀"
+    touch "$STATE"
+fi
