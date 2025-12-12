@@ -32,7 +32,7 @@ jobs:
           variant: kinoite
           
       - name: Upload ISO to Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: hues-os-iso
           path: |
